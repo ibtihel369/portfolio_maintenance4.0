@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 2 — Maintenance 4.0 & GMAO</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-950: #020b1a;
+    --blue-900: #041228;
+    --blue-800: #072040;
+    --blue-700: #0a3060;
+    --blue-600: #0d4488;
+    --blue-500: #1260c4;
+    --blue-400: #2b7ef5;
+    --blue-300: #5fa3ff;
+    --blue-200: #a3c8ff;
+    --blue-100: #ddeeff;
+    --accent: #00d4ff;
+    --accent2: #0ff4c6;
+    --white: #f0f6ff;
+    --text-muted: #8bafd4;
+    --card-bg: rgba(7, 32, 64, 0.7);
+    --card-border: rgba(43, 126, 245, 0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-950);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(18, 96, 196, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0, 212, 255, 0.10) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(10, 48, 96, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(43, 126, 245, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43, 126, 245, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+   /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 64px;
+    background: rgba(10,15,30,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--accent2); letter-spacing: 0.05em; text-transform: uppercase; }
+  .nav-back {
+    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(59,130,246,0.3); border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .nav-back:hover { background: rgba(59,130,246,0.08); }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 8rem 3rem 5rem; text-align: center;
+  }
+
+  .hero-inner { max-width: 900px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.25);
+    border-radius: 999px; padding: 0.4rem 1.2rem; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 2rem; animation: fadeDown 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px; background: var(--accent);
+    border-radius: 50%; animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+    margin-bottom: 1.5rem; animation: fadeUp 0.9s ease 0.15s both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--blue-300), var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-muted); max-width: 640px;
+    margin: 0 auto 3rem; font-weight: 300; animation: fadeUp 0.9s ease 0.3s both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3rem; animation: fadeUp 0.9s ease 0.45s both;
+  }
+
+  .stat {
+    text-align: center; padding: 1.2rem 2rem; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-radius: 16px; backdrop-filter: blur(10px); min-width: 120px;
+  }
+
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+  /* SECTIONS */
+  section {
+    position: relative; z-index: 1;
+    padding: 6rem 3rem; max-width: 1200px; margin: 0 auto;
+  }
+
+  .section-header { text-align: center; margin-bottom: 4rem; }
+
+  .section-tag {
+    display: inline-block; background: rgba(18, 96, 196, 0.15);
+    border: 1px solid rgba(43, 126, 245, 0.3); color: var(--blue-300);
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 999px; margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--white);
+  }
+
+  .section-title em { font-style: normal; color: var(--accent); }
+
+  .section-desc {
+    margin-top: 1rem; color: var(--text-muted); font-size: 1rem;
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+
+  /* CARDS */
+  .content-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
+  }
+
+  .content-card {
+    position: relative; padding: 2rem; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-radius: 20px; backdrop-filter: blur(10px);
+    transition: all 0.3s; overflow: hidden;
+  }
+
+  .content-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-400), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .content-card:hover {
+    border-color: rgba(43, 126, 245, 0.5); transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .content-card:hover::before { opacity: 1; }
+
+  .card-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+
+  .card-title {
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.7rem;
+  }
+
+  .card-desc { color: var(--text-muted); font-size: 0.875rem; line-height: 1.7; }
+
+  .card-items { margin-top: 1rem; list-style: none; }
+
+  .card-items li {
+    color: var(--blue-200); font-size: 0.82rem; padding: 0.25rem 0;
+    padding-left: 1rem; position: relative;
+  }
+
+  .card-items li::before { content: '›'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+  /* BIG DATA TABLE */
+  .data-table {
+    width: 100%; border-collapse: collapse; font-size: 0.875rem;
+  }
+
+  .data-table th {
+    font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+    padding: 0.9rem 1.2rem; background: rgba(18, 96, 196, 0.2);
+    border-bottom: 1px solid rgba(43, 126, 245, 0.3); text-align: left;
+  }
+
+  .data-table td {
+    padding: 0.9rem 1.2rem; color: var(--text-muted);
+    border-bottom: 1px solid rgba(43, 126, 245, 0.1); vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(43, 126, 245, 0.05); }
+
+  .data-table td:first-child {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.5rem; color: var(--accent); width: 50px;
+  }
+
+  .data-table td:nth-child(2) {
+    font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white); font-size: 0.9rem;
+  }
+
+  .table-wrapper {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px);
+  }
+
+  /* GMAO TOOLS */
+  .tools-comparison {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+
+  .tool-card {
+    padding: 2rem; background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; backdrop-filter: blur(10px); transition: all 0.3s;
+  }
+
+  .tool-card:hover {
+    border-color: rgba(0, 212, 255, 0.4); transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  }
+
+  .tool-badge {
+    display: inline-block; font-family: 'Syne', sans-serif;
+    font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.8rem;
+    border-radius: 8px; margin-bottom: 1rem; letter-spacing: 0.08em;
+  }
+
+  .tool-badge.sap { background: rgba(0, 180, 90, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+  .tool-badge.fiix { background: rgba(0, 150, 255, 0.2); color: var(--blue-300); border: 1px solid rgba(95, 163, 255, 0.3); }
+  .tool-badge.upkeep { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); }
+
+  .tool-name {
+    font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+
+  .tool-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .tool-features { list-style: none; }
+
+  .tool-features li {
+    font-size: 0.82rem; color: var(--blue-200); padding: 0.35rem 0;
+    padding-left: 1rem; position: relative;
+    border-bottom: 1px solid rgba(43, 126, 245, 0.08);
+  }
+
+  .tool-features li:last-child { border-bottom: none; }
+
+  .tool-features li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; }
+
+  /* CASE STUDIES */
+  .case-study {
+    padding: 2.5rem; background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 24px; backdrop-filter: blur(10px); margin-bottom: 2rem;
+  }
+
+  .case-header {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+  }
+
+  .case-logo {
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800;
+    padding: 0.5rem 1rem; border-radius: 10px; letter-spacing: 0.05em;
+  }
+
+  .case-logo.siemens { background: rgba(0, 148, 255, 0.2); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.3); }
+  .case-logo.schneider { background: rgba(0, 180, 120, 0.2); color: var(--accent2); border: 1px solid rgba(15, 244, 198, 0.3); }
+
+  .case-title {
+    font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--white);
+  }
+
+  .case-subtitle { font-size: 0.82rem; color: var(--text-muted); }
+
+  .case-body { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+  .case-section h4 {
+    font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.8rem;
+  }
+
+  .case-section ul { list-style: none; }
+
+  .case-section ul li {
+    font-size: 0.85rem; color: var(--text-muted); padding: 0.3rem 0;
+    padding-left: 1.2rem; position: relative;
+  }
+
+  .case-section ul li::before { content: '•'; position: absolute; left: 0; color: var(--accent); }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+
+  .kpi-item {
+    padding: 0.8rem; background: rgba(0, 212, 255, 0.06);
+    border: 1px solid rgba(0, 212, 255, 0.15); border-radius: 12px; text-align: center;
+  }
+
+  .kpi-value {
+    font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--accent2); line-height: 1;
+  }
+
+  .kpi-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  /* INFO BOX */
+  .info-box {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, rgba(18, 96, 196, 0.12), rgba(0, 212, 255, 0.06));
+    border: 1px solid rgba(0, 212, 255, 0.25); border-radius: 16px;
+    font-size: 0.9rem; color: var(--blue-200); line-height: 1.7;
+    margin: 2rem 0;
+  }
+
+  .info-box strong { color: var(--accent); }
+
+  /* SYNTHESE */
+  .synthese-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+  .synthese-card {
+    padding: 2rem; background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; backdrop-filter: blur(10px); text-align: center; transition: all 0.3s;
+  }
+
+  .synthese-card:hover {
+    border-color: rgba(0, 212, 255, 0.4); transform: translateY(-4px);
+  }
+
+  .synthese-pct {
+    font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: 0.3rem;
+  }
+
+  .synthese-pct.blue { color: var(--accent); }
+  .synthese-pct.green { color: var(--accent2); }
+  .synthese-pct.purple { color: #c084fc; }
+
+  .synthese-title {
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+
+  .synthese-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* SOURCES */
+  .sources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.8rem; }
+
+  .source-item {
+    padding: 0.9rem 1.2rem; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-radius: 12px; font-size: 0.8rem;
+  }
+
+  .source-item strong {
+    display: block; color: var(--blue-200); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;
+  }
+
+  .source-item a { color: var(--accent); text-decoration: none; word-break: break-all; font-size: 0.78rem; }
+  .source-item a:hover { text-decoration: underline; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(43, 126, 245, 0.3), transparent);
+    margin: 0; position: relative; z-index: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1; text-align: center; padding: 3rem;
+    color: var(--text-muted); font-size: 0.82rem;
+    border-top: 1px solid rgba(43, 126, 245, 0.1);
+  }
+  footer strong { color: var(--accent); }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    .tools-comparison { grid-template-columns: 1fr; }
+    .case-body { grid-template-columns: 1fr; }
+    .synthese-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .content-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+  }
+
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .main-content {
+      margin-left: 0;
+    }
+    .sidebar-toggle {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { width: 200px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Maintenance 4.0</div>
+  <a href="index.html" class="nav-back">← Retour</a>
+</nav>
+
+
+
+
+<!-- SIDEBAR TOGGLE (mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<!-- MAIN CONTENT WRAPPER -->
+<div class="main-content">
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+   
+    <h1>Maintenance 4.0 &<br><em>GMAO 4.0</em></h1>
+   
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Outils GMAO</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Études de cas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">-20%</div>
+        <div class="stat-label">Temps d'arrêt</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4V</div>
+        <div class="stat-label">Big Data</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- INTRODUCTION -->
+<section id="intro" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">00 · Introduction</div>
+    <h2 class="section-title">L'Avènement de la <em>Maintenance Intelligente</em></h2>
+    <p class="section-desc">L'Industrie 4.0 a profondément transformé les pratiques de maintenance industrielle en intégrant des technologies numériques de pointe.</p>
+  </div>
+
+  <div class="info-box reveal">
+    <strong>🎯 Objectifs de la Section :</strong> Comprendre l'architecture technologique de la Maintenance 4.0 | Maîtriser les fonctionnalités des outils GMAO 4.0 (SAP PM, Fiix, UpKeep) | Analyser des cas concrets d'usines connectées | Identifier les bénéfices mesurables de la transformation digitale en maintenance.
+  </div>
+
+  <div class="content-grid reveal">
+    <div class="content-card reveal reveal-delay-1">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Internet des Objets (IoT)</div>
+      <div class="card-desc">Interconnexion de machines, équipements et capteurs physiques qui collectent et transmettent des données en temps réel. Dans le contexte industriel, on parle d'IIoT.</div>
+    </div>
+    <div class="content-card reveal reveal-delay-2">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Big Data</div>
+      <div class="card-desc">Volumes massifs de données industrielles dépassant les capacités des outils classiques de traitement, analysés pour extraire des insights opérationnels.</div>
+    </div>
+    <div class="content-card reveal reveal-delay-3">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Intelligence Artificielle</div>
+      <div class="card-desc">Le Machine Learning transforme les signaux faibles en prédictions fiables et en recommandations d'actions de maintenance, constituant le cerveau de la Maintenance 4.0.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- IOT -->
+<section id="iot" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">01 · IoT & Capteurs</div>
+    <h2 class="section-title"><em>IoT</em> — Les Yeux et Oreilles de la Maintenance</h2>
+    <p class="section-desc">Types de capteurs et plateformes IoT industrielles majeures déployées dans la Maintenance 4.0.</p>
+  </div>
+
+  <div class="content-grid reveal">
+    <div class="content-card reveal reveal-delay-1">
+      <div class="card-icon">📡</div>
+      <div class="card-title">Types de capteurs déployés</div>
+      <ul class="card-items">
+        <li>Capteurs de vibration : anomalies mécaniques sur roulements, moteurs</li>
+        <li>Capteurs de température : surveillance thermique des équipements</li>
+        <li>Capteurs de pression : systèmes hydrauliques et pneumatiques</li>
+        <li>Analyse d'huile en ligne : détection d'usure et contamination</li>
+        <li>Caméras thermiques infrarouge : imagerie à distance</li>
+        <li>Microphones intelligents : détection acoustique d'anomalies</li>
+      </ul>
+    </div>
+
+    <div class="content-card reveal reveal-delay-2">
+      <div class="card-icon">☁️</div>
+      <div class="card-title">Plateformes IoT industrielles</div>
+      <ul class="card-items">
+        <li>Siemens MindSphere : cloud open IoT pour l'analyse industrielle</li>
+        <li>Microsoft Azure IoT Suite : analytics et Machine Learning</li>
+        <li>IBM Watson IoT : contrôle à distance, stockage sécurisé</li>
+        <li>Amazon AWS IoT : Core, Device Management, Analytics</li>
+        <li>Google Cloud IoT : BigQuery + Cloud Machine Learning</li>
+      </ul>
+    </div>
+
+    <div class="content-card reveal reveal-delay-3">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Cycle de données IoT</div>
+      <div class="card-desc">Les capteurs déployés sur les équipements critiques génèrent des flux de données continus. Via les plateformes de Device Management, ces données sont collectées, acheminées vers des systèmes de traitement et intégrées à la GMAO pour déclencher des alertes ou des ordres de travail automatiques.</div>
+    </div>
+  </div>
+
+  <!-- Big Data -->
+  <div id="bigdata" style="margin-top: 4rem; scroll-margin-top: 90px;">
+    <div class="section-header reveal">
+      <div class="section-tag">01.2 · Big Data</div>
+      <h2 class="section-title">Big Data — Les <em>4V</em> en Maintenance</h2>
+    </div>
+
+    <div class="table-wrapper reveal">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>V</th>
+            <th>Dimension</th>
+            <th>Application en Maintenance Industrielle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>V1</td>
+            <td>Volume</td>
+            <td>Milliers de capteurs générant des TB de données/jour (températures, vibrations, pressions…)</td>
+          </tr>
+          <tr>
+            <td>V2</td>
+            <td>Vélocité</td>
+            <td>Traitement en temps réel des données pour détecter anomalies et déclencher des alertes immédiates</td>
+          </tr>
+          <tr>
+            <td>V3</td>
+            <td>Variété</td>
+            <td>Données structurées (capteurs) + non structurées (images IR, sons, textes de rapports d'intervention)</td>
+          </tr>
+          <tr>
+            <td>V4</td>
+            <td>Véracité</td>
+            <td>Qualité et fiabilité des données : filtrage du bruit, détection d'outliers, validation des mesures</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- IA -->
+  <div id="ia" style="margin-top: 4rem; scroll-margin-top: 90px;">
+    <div class="section-header reveal">
+      <div class="section-tag">01.3 · IA</div>
+      <h2 class="section-title">IA — Le <em>Cerveau</em> de la Maintenance 4.0</h2>
+    </div>
+
+    <div class="content-grid reveal">
+      <div class="content-card reveal reveal-delay-1">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Machine Learning supervisé</div>
+        <div class="card-desc">Classification des états de machines (sain / dégradé / défaillant) à partir de données historiques labellisées.</div>
+      </div>
+      <div class="content-card reveal reveal-delay-2">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Deep Learning</div>
+        <div class="card-desc">Analyse de séries temporelles complexes, traitement d'images thermiques et acoustiques via des réseaux de neurones.</div>
+      </div>
+      <div class="content-card reveal reveal-delay-3">
+        <div class="card-icon">⚠️</div>
+        <div class="card-title">Détection d'anomalies</div>
+        <div class="card-desc">Identification automatique de comportements anormaux sans historique de pannes — très utile pour les équipements récents.</div>
+      </div>
+      <div class="content-card reveal reveal-delay-1">
+        <div class="card-icon">⏱️</div>
+        <div class="card-title">Modèles RUL</div>
+        <div class="card-desc">Estimation du temps avant défaillance (Remaining Useful Life) pour planifier les interventions au moment optimal.</div>
+      </div>
+      <div class="content-card reveal reveal-delay-2">
+        <div class="card-icon">💬</div>
+        <div class="card-title">NLP — Traitement du langage</div>
+        <div class="card-desc">Analyse des rapports de maintenance pour extraire des connaissances implicites et enrichir les modèles IA.</div>
+      </div>
+    </div>
+
+    <div class="info-box reveal" style="margin-top: 2rem;">
+      <strong>💡 Cycle vertueux de la Maintenance Intelligente :</strong> Les capteurs IoT collectent les données → Le Big Data stocke et prépare les données → L'IA analyse et prédit → La GMAO déclenche les interventions → Les techniciens interviennent → Les retours enrichissent les modèles IA → Le cycle s'améliore en continu.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GMAO 4.0 -->
+<section id="gmao" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">02 · Outils GMAO</div>
+    <h2 class="section-title">Outils de <em>GMAO 4.0</em></h2>
+    <p class="section-desc">La GMAO 4.0 est une plateforme numérique intégrée, connectée à l'écosystème IoT, enrichie par l'IA et accessible en mobilité depuis n'importe quel terminal.</p>
+  </div>
+
+  <div class="tools-comparison reveal">
+    <!-- SAP PM -->
+    <div class="tool-card reveal reveal-delay-1">
+      <div class="tool-badge sap">Grandes entreprises</div>
+      <div class="tool-name">SAP Plant Maintenance</div>
+      <div class="tool-subtitle">Module SAP S/4HANA · Intégration ERP complète</div>
+      <ul class="tool-features">
+        <li>Gestion des équipements et postes techniques avec historique</li>
+        <li>Planification maintenances préventives automatiques</li>
+        <li>Gestion des ordres : de la demande à la clôture</li>
+        <li>Intégration SAP IoT / MindSphere native</li>
+        <li>Analytics KPI : MTBF, MTTR, coût de cycle de vie</li>
+        <li>Gestion pièces de rechange via SAP MM</li>
+        <li>Déclenchement automatique via alertes capteurs</li>
+      </ul>
+    </div>
+
+    <!-- Fiix -->
+    <div class="tool-card reveal reveal-delay-2">
+      <div class="tool-badge fiix">PME / ETI</div>
+      <div class="tool-name">Fiix</div>
+      <div class="tool-subtitle">Cloud-native SaaS · Rockwell Automation</div>
+      <ul class="tool-features">
+        <li>Interface intuitive à courbe d'apprentissage rapide</li>
+        <li>Maintenance prédictive intégrée avec alertes automatiques</li>
+        <li>Application mobile iOS/Android pour techniciens terrain</li>
+        <li>Intégrations natives SAP, Oracle, Salesforce via API REST</li>
+        <li>Gestion des pièces de rechange par algorithme</li>
+        <li>Mise à jour continue garantie par le SaaS</li>
+      </ul>
+    </div>
+
+    <!-- UpKeep -->
+    <div class="tool-card reveal reveal-delay-3">
+      <div class="tool-badge upkeep">Équipes terrain</div>
+      <div class="tool-name">UpKeep</div>
+      <div class="tool-subtitle">Mobile-first · Simplicité maximale</div>
+      <ul class="tool-features">
+        <li>Application native iOS/Android comme interface principale</li>
+        <li>Demandes de travaux depuis smartphone (opérateurs)</li>
+        <li>Photos, codes-barres et QR codes intégrés</li>
+        <li>Capteurs IoT connectables (température, vibration)</li>
+        <li>Rapports de performance hebdomadaires automatiques</li>
+        <li>Modèle freemium pour adoption progressive</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box reveal" style="margin-top: 2rem;">
+    <strong>📊 Synthèse comparative :</strong> SAP PM est idéal pour les grandes entreprises ayant un ERP SAP existant, offrant une intégration maximale mais à coût élevé. Fiix convient parfaitement aux PME/ETI souhaitant des fonctionnalités avancées avec un déploiement rapide. UpKeep est la solution de choix pour les équipes terrain privilégiant la simplicité mobile et un budget maîtrisé.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ÉTUDES DE CAS -->
+<section id="cas" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">03 · Études de Cas</div>
+    <h2 class="section-title">Usines <em>Connectées</em></h2>
+    <p class="section-desc">Deux études de cas emblématiques illustrant concrètement les bénéfices de la Maintenance 4.0.</p>
+  </div>
+
+  <!-- Siemens -->
+  <div class="case-study reveal">
+    <div class="case-header">
+      <div class="case-logo siemens">SIEMENS</div>
+      <div>
+        <div class="case-title">Usine d'Amberg — Référence Mondiale de l'Industrie 4.0</div>
+        <div class="case-subtitle">Fabrication de contrôleurs SIMATIC · Taux d'automatisation > 75% · Amberg, Allemagne</div>
+      </div>
+    </div>
+    <div class="case-body">
+      <div class="case-section">
+        <h4>Technologies déployées</h4>
+        <ul>
+          <li>Système de contrôle à mémoire programmable (PLC) avec surveillance temps réel des performances machines</li>
+          <li>Algorithmes de Machine Learning pour prédiction des pannes</li>
+          <li>Plateforme MindSphere (IoT cloud OS de Siemens)</li>
+          <li>Digital Twin pour simuler et optimiser les processus</li>
+          <li>Capteurs IoT sur chaque machine pour correction immédiate (2023)</li>
+        </ul>
+      </div>
+      <div class="case-section">
+        <h4>Résultats mesurés</h4>
+        <div class="kpi-grid">
+          <div class="kpi-item">
+            <div class="kpi-value">-20%</div>
+            <div class="kpi-label">Temps d'arrêt</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">+15%</div>
+            <div class="kpi-label">Productivité/an</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">11.5</div>
+            <div class="kpi-label">Défauts ppm</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">+50%</div>
+            <div class="kpi-label">Efficacité éoliennes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schneider Electric -->
+  <div class="case-study reveal">
+    <div class="case-header">
+      <div class="case-logo schneider">SCHNEIDER</div>
+      <div>
+        <div class="case-title">EcoStruxure — Smart Factory Programme</div>
+        <div class="case-subtitle">Le Vaudreuil (France) & Lexington (USA) · Vitrine Industrie du Futur</div>
+      </div>
+    </div>
+    <div class="case-body">
+      <div class="case-section">
+        <h4>Usine du Vaudreuil — Technologies</h4>
+        <ul>
+          <li>IoT maintenance prédictive sur tous équipements critiques</li>
+          <li>Robotique collaborative (cobots) homme-machine</li>
+          <li>Véhicules à guidage automatique (AGV)</li>
+          <li>Modélisation cloud des grandeurs physiques</li>
+          <li>Gestion intégrée du bâtiment pour performance énergétique</li>
+          <li>Labellisée « Vitrine Industrie du Futur »</li>
+        </ul>
+      </div>
+      <div class="case-section">
+        <h4>Usine de Lexington — Résultats</h4>
+        <div class="kpi-grid">
+          <div class="kpi-item">
+            <div class="kpi-value">-20%</div>
+            <div class="kpi-label">MTTR équipements</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">-90%</div>
+            <div class="kpi-label">Travail administratif</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">-15%</div>
+            <div class="kpi-label">Arrêts imprévus</div>
+          </div>
+          <div class="kpi-item">
+            <div class="kpi-value">-12%</div>
+            <div class="kpi-label">Empreinte carbone</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box reveal">
+    <strong>🔑 Facteurs Clés de Succès :</strong> 1) Commencer par un diagnostic de maturité digitale | 2) Choisir des projets pilotes à fort ROI visible | 3) Former les équipes aux nouvelles technologies | 4) Assurer une conduite du changement participative | 5) Intégrer la cybersécurité dès la conception | 6) Mesurer et communiquer les bénéfices obtenus.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SYNTHÈSE -->
+<section id="synthese" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">04 · Perspectives</div>
+    <h2 class="section-title">Synthèse & <em>Perspectives</em></h2>
+    <p class="section-desc">La Maintenance 4.0 représente une transformation profonde et irréversible des pratiques de maintenance industrielle.</p>
+  </div>
+
+  <div class="synthese-grid reveal">
+    <div class="synthese-card reveal reveal-delay-1">
+      <div class="synthese-pct blue">IoT</div>
+      <div class="synthese-title">Socle technologique</div>
+      <div class="synthese-desc">Capteurs connectés qui alimentent en continu les systèmes d'analyse avec des données temps réel.</div>
+    </div>
+    <div class="synthese-card reveal reveal-delay-2">
+      <div class="synthese-pct green">IA</div>
+      <div class="synthese-title">Intelligence prédictive</div>
+      <div class="synthese-desc">Passage de la maintenance réactive à une maintenance proactive et prévisionnelle grâce aux modèles ML.</div>
+    </div>
+    <div class="synthese-card reveal reveal-delay-3">
+      <div class="synthese-pct purple">GMAO</div>
+      <div class="synthese-title">Orchestration</div>
+      <div class="synthese-desc">Cœur de l'écosystème qui orchestre les flux d'information et d'intervention maintenance.</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 3rem; padding: 2.5rem; background: linear-gradient(135deg, rgba(18, 96, 196, 0.15), rgba(0, 212, 255, 0.08)); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 24px; text-align: center;" class="reveal">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; color:var(--accent); margin-bottom:1rem;">Prochaine Étape : Digital Twins</h3>
+    <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.8; max-width:700px; margin:0 auto;">La prochaine étape de cette évolution réside dans les Digital Twins (jumeaux numériques), qui permettront de simuler et d'optimiser en temps réel le comportement des équipements, ouvrant la voie à la maintenance autonome et auto-apprenante — thème approfondi en Section 7 de ce portfolio.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOURCES -->
+<section id="sources" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">05 · Références</div>
+    <h2 class="section-title">Sources & <em>Bibliographie</em></h2>
+  </div>
+
+  <div class="sources-grid reveal">
+    <div class="source-item">
+      <strong>GMAO.com</strong>
+      <a href="https://www.gmao.com/digitalisation-maintenance/performance/" target="_blank">La GMAO, pilier de la maintenance 4.0 ?</a>
+    </div>
+    <div class="source-item">
+      <strong>Mobility Work</strong>
+      <a href="https://mobility-work.com/fr/blog/industrie-40-gmao-maintenance-demain/" target="_blank">Industrie 4.0, IoT et GMAO Mobile</a>
+    </div>
+    <div class="source-item">
+      <strong>GMAO.com</strong>
+      <a href="https://www.gmao.com/types-de-maintenance/pourquoi-la-maintenance-predictive-est-elle-cruciale-pour-l-industrie-4-0/" target="_blank">Maintenance prédictive et Industrie 4.0</a>
+    </div>
+    <div class="source-item">
+      <strong>Divalto</strong>
+      <a href="https://www.divalto.com/ia-iot-big-data-machine-learning-dans-lindustrie/" target="_blank">IA, IoT, Big Data et Machine Learning</a>
+    </div>
+    <div class="source-item">
+      <strong>Techniques de l'Ingénieur</strong>
+      <a href="https://www.techniques-ingenieur.fr/actualite/articles/industrie-4-0-de-la-maintenance-corrective-a-la-maintenance-predictive-intelligente-121605/" target="_blank">De la maintenance corrective à la prédictive</a>
+    </div>
+    <div class="source-item">
+      <strong>INO Industry · Siemens</strong>
+      <a href="https://inoindustry.com/manufacture-intelligente-a-lere-de-lindustrie-4-0-etude-de-cas-sur-siemens/" target="_blank">Manufacture intelligente — Siemens</a>
+    </div>
+    <div class="source-item">
+      <strong>Schneider Electric</strong>
+      <a href="https://www.se.com/fr/fr/about-us/newsroom/news/press-releases/schneider-electric-lance-sa-premi%C3%A8re-usine-intelligente-aux-%C3%A9tats-unis" target="_blank">Usine intelligente de Lexington</a>
+    </div>
+    <div class="source-item">
+      <strong>SAP Documentation</strong>
+      <a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE" target="_blank">SAP Plant Maintenance · S/4HANA</a>
+    </div>
+    <div class="source-item">
+      <strong>Fiix CMMS</strong>
+      <a href="https://www.fiixsoftware.com" target="_blank">fiixsoftware.com · Rockwell Automation</a>
+    </div>
+    <div class="source-item">
+      <strong>UpKeep CMMS</strong>
+      <a href="https://www.onupkeep.com" target="_blank">onupkeep.com</a>
+    </div>
+    <div class="source-item">
+      <strong>Siemens MindSphere</strong>
+      <a href="https://www.siemens.com/global/en/products/automation/industry-software/mindsphere.html" target="_blank">Plateforme IoT MindSphere</a>
+    </div>
+    <div class="source-item">
+      <strong>EcoStruxure Schneider</strong>
+      <a href="https://www.se.com/fr/fr/work/campaign/ecostruxure/" target="_blank">Architecture IoT EcoStruxure</a>
+    </div>
+    <div class="source-item">
+      <strong>IBM Maximo</strong>
+      <a href="https://www.ibm.com/products/maximo" target="_blank">IBM AI for Industry · Maximo</a>
+    </div>
+    <div class="source-item">
+      <strong>Coursera IoT</strong>
+      <a href="https://www.coursera.org/learn/iot" target="_blank">Introduction to Industrial IoT</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Portfolio Numérique · <strong>Maintenance Intelligente & Stratégies 4.0</strong> · 2026</p>
+  <p style="margin-top:0.8rem;"><a href="index.html">← Retour</a></p>
+</footer>
+<script>
+  // Reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Sidebar active state + progress
+  const sections = [
+    { id: 'intro',    selector: '#intro' },
+    { id: 'iot',      selector: '#iot' },
+    { id: 'bigdata',  selector: '#bigdata' },
+    { id: 'ia',       selector: '#ia' },
+    { id: 'gmao',     selector: '#gmao' },
+    { id: 'cas',      selector: '#cas' },
+    { id: 'synthese', selector: '#synthese' },
+    { id: 'sources',  selector: '#sources' },
+  ];
+
+  function updateSidebar() {
+    const scrollY = window.scrollY;
+    const winH = window.innerHeight;
+    const docH = document.documentElement.scrollHeight - winH;
+    const pct = Math.round(Math.min(100, (scrollY / docH) * 100));
+
+    // Progress bar
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+
+    // Active section
+    let active = sections[0].id;
+    for (const s of sections) {
+      const el = document.querySelector(s.selector);
+      if (!el) continue;
+      const top = el.getBoundingClientRect().top;
+      if (top <= 120) active = s.id;
+    }
+
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      const sec = item.getAttribute('data-section');
+      item.classList.toggle('active', sec === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateSidebar, { passive: true });
+  updateSidebar();
+
+  // Smooth scroll + close sidebar on mobile
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    });
+  });
+</script>
+</div><!-- end main-content -->
+</body>
+</html>

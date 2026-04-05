@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Management Énergétique - ISO 50001</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#0a0f1e;
+    --card:#1a2235;
+    --border:rgba(255,255,255,0.08);
+    --accent:#06b6d4;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+}
+
+section{
+    max-width:1100px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+.hero{
+    min-height:60vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+}
+
+.hero h1{
+    font-family:'Syne',sans-serif;
+    font-size:55px;
+    margin-bottom:20px;
+}
+
+.hero span{
+    color:var(--accent);
+}
+
+.hero p{
+    max-width:700px;
+    margin:auto;
+    color:var(--muted);
+    font-size:18px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:15px;
+    margin-bottom:15px;
+    overflow:hidden;
+}
+
+.card-header{
+    padding:20px;
+    cursor:pointer;
+    font-family:'Syne',sans-serif;
+    font-size:22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card-header:hover{
+    background:rgba(6,182,212,0.05);
+}
+
+.card-content{
+    display:none;
+    padding:20px;
+    border-top:1px solid var(--border);
+    color:var(--muted);
+}
+
+ul{
+    padding-left:20px;
+    margin-top:10px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.footer-box{
+    background:var(--card);
+    padding:25px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    margin-top:30px;
+}
+
+.highlight{
+    color:var(--accent);
+    font-weight:600;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <div>
+        <h1>Management <span>Énergétique</span><br>ISO 50001</h1>
+        <p>
+            Une approche stratégique permettant d’optimiser la consommation énergétique,
+            réduire les coûts et améliorer durablement la performance industrielle.
+        </p>
+    </div>
+</section>
+
+<!-- CONTENT -->
+<section>
+
+    <div class="card">
+        <div class="card-header" onclick="toggleBox('def')">
+            Définition ▼
+        </div>
+        <div class="card-content" id="def">
+            <p>
+                Le management énergétique selon la norme <span class="highlight">ISO 50001</span>
+                est une démarche structurée qui permet à une organisation
+                d’améliorer continuellement sa performance énergétique,
+                réduire sa consommation d’énergie et ses coûts,
+                tout en diminuant son impact environnemental.
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" onclick="toggleBox('obj')">
+            Objectifs principaux ▼
+        </div>
+        <div class="card-content" id="obj">
+            <ul>
+                <li>Réduire les coûts énergétiques</li>
+                <li>Améliorer l’efficacité énergétique</li>
+                <li>Diminuer l’impact environnemental</li>
+                <li>Respecter les exigences réglementaires</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" onclick="toggleBox('industrie')">
+            Importance dans l’Industrie 4.0 ▼
+        </div>
+        <div class="card-content" id="industrie">
+            <p>
+                Dans l’Industrie 4.0, ISO 50001 joue un rôle stratégique grâce à :
+            </p>
+            <ul>
+                <li>Surveillance continue via capteurs intelligents</li>
+                <li>Analyse des données en temps réel</li>
+                <li>Maintenance prédictive</li>
+                <li>Optimisation intelligente des procédés</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" onclick="toggleBox('advantages')">
+            Avantages ▼
+        </div>
+        <div class="card-content" id="advantages">
+            <ul>
+                <li>Réduction significative de la consommation</li>
+                <li>Diminution des coûts d’exploitation</li>
+                <li>Réduction de l’empreinte carbone</li>
+                <li>Amélioration de la compétitivité</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" onclick="toggleBox('history')">
+            Historique ▼
+        </div>
+        <div class="card-content" id="history">
+            <p>
+                La norme ISO 50001 a été publiée en <span class="highlight">2011</span>,
+                puis révisée en <span class="highlight">2018</span>
+                pour s’aligner avec ISO 9001 et ISO 14001.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer-box">
+        <p>
+            💡 <span class="highlight">Résumé :</span>
+            ISO 50001 fournit un cadre professionnel permettant
+            une gestion intelligente de l’énergie,
+            particulièrement adaptée aux environnements industriels modernes.
+        </p>
+    </div>
+
+</section>
+
+<script>
+function toggleBox(id){
+    let box=document.getElementById(id);
+
+    if(box.style.display==="block"){
+        box.style.display="none";
+    }else{
+        box.style.display="block";
+    }
+}
+</script>
+
+</body>
+</html>

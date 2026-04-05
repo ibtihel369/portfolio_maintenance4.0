@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 1 — Généralités sur la Maintenance Industrielle</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-950: #020b1a;
+    --blue-900: #041228;
+    --blue-800: #072040;
+    --blue-700: #0a3060;
+    --blue-600: #0d4488;
+    --blue-500: #1260c4;
+    --blue-400: #2b7ef5;
+    --blue-300: #5fa3ff;
+    --blue-200: #a3c8ff;
+    --blue-100: #ddeeff;
+    --accent: #00d4ff;
+    --accent2: #0ff4c6;
+    --white: #f0f6ff;
+    --text-muted: #8bafd4;
+    --card-bg: rgba(7, 32, 64, 0.7);
+    --card-border: rgba(43, 126, 245, 0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-950);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(18, 96, 196, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0, 212, 255, 0.10) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(10, 48, 96, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(43, 126, 245, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43, 126, 245, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 64px;
+    background: rgba(10,15,30,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--accent2); letter-spacing: 0.05em; text-transform: uppercase; }
+  .nav-back {
+    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(59,130,246,0.3); border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .nav-back:hover { background: rgba(59,130,246,0.08); }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 8rem 3rem 5rem;
+    text-align: center;
+  }
+
+  .hero-inner { max-width: 860px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    border-radius: 999px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.9s ease 0.15s both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--blue-300), var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+    animation: fadeUp 0.9s ease 0.3s both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.9s ease 0.45s both;
+  }
+
+  .stat {
+    text-align: center;
+    padding: 1.2rem 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    min-width: 120px;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+
+  .hero-cta {
+    display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.9s ease 0.6s both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: linear-gradient(135deg, var(--blue-500), var(--accent));
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(18, 96, 196, 0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative; z-index: 1;
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background: rgba(18, 96, 196, 0.15);
+    border: 1px solid rgba(43, 126, 245, 0.3);
+    color: var(--blue-300);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--white);
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .section-desc {
+    margin-top: 1rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* CONTENT GRID */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .content-card {
+    position: relative;
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-400), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .content-card:hover {
+    border-color: rgba(43, 126, 245, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .content-card:hover::before { opacity: 1; }
+
+  .card-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.7rem;
+  }
+
+  .card-desc {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .card-items {
+    margin-top: 1rem;
+    list-style: none;
+  }
+
+  .card-items li {
+    color: var(--blue-200);
+    font-size: 0.82rem;
+    padding: 0.25rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .card-items li::before {
+    content: '›';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.7rem; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--blue-500), var(--accent), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding: 1.8rem 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .timeline-item:hover {
+    border-color: rgba(0, 212, 255, 0.4);
+    transform: translateX(6px);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.45rem; top: 1.8rem;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border: 2px solid var(--blue-950);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+  }
+
+  .timeline-week {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+
+  .timeline-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .timeline-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    background: rgba(18, 96, 196, 0.2);
+    border: 1px solid rgba(43, 126, 245, 0.25);
+    color: var(--blue-200);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  /* PROS/CONS GRID */
+  .pros-cons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .pros-cons-card {
+    padding: 1.8rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  .pros-cons-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .pros-cons-card h4.green { color: var(--accent2); }
+  .pros-cons-card h4.red { color: #f87171; }
+
+  .pros-cons-card ul { list-style: none; }
+  .pros-cons-card ul li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.3rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .pros-cons-card ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    font-size: 0.75rem;
+  }
+  .pros-cons-card.pros li::before { color: var(--accent2); }
+  .pros-cons-card.cons li::before { color: #f87171; }
+
+  /* NORMES */
+  .norms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .norm-card {
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+
+  .norm-card:hover {
+    border-color: rgba(0, 212, 255, 0.4);
+    transform: translateY(-4px);
+  }
+
+  .norm-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.3rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .norm-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+
+  .norm-desc {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  /* CONCLUSION BOX */
+  .conclusion-box {
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(18, 96, 196, 0.15), rgba(0, 212, 255, 0.08));
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 24px;
+    text-align: center;
+  }
+
+  .conclusion-box h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .conclusion-box p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* SOURCES */
+  .sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .source-item {
+    padding: 1rem 1.2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+
+  .source-item strong {
+    display: block;
+    color: var(--blue-200);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .source-item a {
+    color: var(--accent);
+    text-decoration: none;
+    word-break: break-all;
+    font-size: 0.78rem;
+  }
+
+  .source-item a:hover { text-decoration: underline; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(43, 126, 245, 0.3), transparent);
+    margin: 0;
+    position: relative; z-index: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid rgba(43, 126, 245, 0.1);
+  }
+
+  footer strong { color: var(--accent); }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    .norms-grid { grid-template-columns: 1fr; }
+    .pros-cons-grid { grid-template-columns: 1fr; }
+    .content-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+  }
+
+
+
+  @media (max-width: 1024px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+    .sidebar-toggle { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Maintenance 4.0</div>
+  <a href="index.html" class="nav-back">← Retour</a>
+</nav>
+
+<!-- SIDEBAR -->
+
+
+<!-- SIDEBAR TOGGLE (mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<!-- MAIN CONTENT WRAPPER -->
+<div class="main-content">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+  
+    <h1>Généralités sur la<br><em>Maintenance Industrielle</em></h1>
+    <p class="hero-sub">Concepts fondamentaux, typologies, normes et évolution vers l'Industrie 4.0 </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Types clés</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Normes majeures</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4.0</div>
+        <div class="stat-label">Industrie</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#intro" class="btn-primary">↓ Découvrir</a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- INTRO & DÉFINITION -->
+<section id="intro" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">01 · Fondamentaux</div>
+    <h2 class="section-title">Introduction & <em>Définition</em></h2>
+    <p class="section-desc">La maintenance industrielle, pilier stratégique de la performance des systèmes de production modernes.</p>
+  </div>
+
+  <div class="content-grid">
+    <div class="content-card reveal reveal-delay-1">
+      <div class="card-icon">🏭</div>
+      <div class="card-title">Contexte industriel</div>
+      <div class="card-desc">Dans le contexte industriel moderne, la maintenance industrielle occupe une place stratégique dans l'amélioration de la performance des systèmes de production. Elle permet d'assurer la disponibilité des équipements, de réduire les coûts liés aux pannes et d'améliorer la sécurité des installations et du personnel.</div>
+    </div>
+
+    <div class="content-card reveal reveal-delay-2">
+      <div class="card-icon">📖</div>
+      <div class="card-title">Définition (AFNOR)</div>
+      <div class="card-desc">La maintenance industrielle désigne l'ensemble des actions techniques, administratives et managériales visant à maintenir ou à rétablir un équipement dans un état lui permettant d'assurer une fonction requise.</div>
+      <ul class="card-items">
+        <li>Norme AFNOR : conserver ou rétablir un bien dans un état spécifié</li>
+        <li>ISO 55000 : élément clé de la gestion des actifs industriels</li>
+        <li>Contribution directe à la performance globale de l'entreprise</li>
+      </ul>
+    </div>
+
+    <div class="content-card reveal reveal-delay-3">
+      <div class="card-icon">📺</div>
+      <div class="card-title">Ressource vidéo</div>
+      <div class="card-desc">Les bases de la maintenance industrielle — introduction visuelle aux concepts fondamentaux.</div>
+      <ul class="card-items">
+        <li><a href="https://www.youtube.com/watch?v=QnY1Z7xYJ2Q" target="_blank" style="color:var(--accent);">▶ Voir la vidéo YouTube</a></li>
+        <li><a href="https://www.ibm.com/topics/industrial-maintenance" target="_blank" style="color:var(--accent);">IBM — Industrial Maintenance</a></li>
+        <li><a href="https://www.mckinsey.com/capabilities/operations/our-insights/predictive-maintenance-4-0" target="_blank" style="color:var(--accent);">McKinsey — Predictive Maintenance 4.0</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HISTORIQUE -->
+<section id="historique" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">02 · Évolution</div>
+    <h2 class="section-title">Historique & <em>Évolution</em></h2>
+    <p class="section-desc">Du correctif au prédictif : la transformation progressive des stratégies de maintenance industrielle.</p>
+  </div>
+
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-week">Étape 1</div>
+      <div class="timeline-title">Maintenance Corrective</div>
+      <div class="timeline-desc">Réparation après apparition de la panne. Approche réactive : on intervient uniquement lorsque l'équipement est défaillant. Première forme historique de maintenance industrielle.</div>
+      <div class="timeline-tags">
+        <span class="tag">Réactif</span>
+        <span class="tag">Post-panne</span>
+        <span class="tag">Simple</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-week">Étape 2</div>
+      <div class="timeline-title">Maintenance Préventive</div>
+      <div class="timeline-desc">Interventions planifiées afin d'éviter les défaillances. Passage à une logique proactive basée sur des calendriers d'intervention réguliers selon le temps, les cycles ou l'usage.</div>
+      <div class="timeline-tags">
+        <span class="tag">Planifié</span>
+        <span class="tag">Proactif</span>
+        <span class="tag">Périodique</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-week">Étape 3</div>
+      <div class="timeline-title">Maintenance Prédictive</div>
+      <div class="timeline-desc">Anticipation des pannes grâce à l'analyse des données et à la surveillance de l'état des équipements. Cette évolution reflète le passage d'une maintenance réactive à une maintenance proactive et intelligente.</div>
+      <div class="timeline-tags">
+        <span class="tag">IA & IoT</span>
+        <span class="tag">Capteurs</span>
+        <span class="tag">Anticipation</span>
+        <span class="tag">Industrie 4.0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TYPES DE MAINTENANCE -->
+<section id="types" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">03 · Typologies</div>
+    <h2 class="section-title">Les <em>Types</em> de Maintenance</h2>
+    <p class="section-desc">Analyse comparative des trois stratégies principales : corrective, préventive et prédictive.</p>
+  </div>
+
+  <!-- Corrective -->
+  <div style="margin-bottom: 3rem;">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:var(--white); margin-bottom:1.5rem; padding-left:1rem; border-left:3px solid var(--accent);">
+      4.1 Maintenance Corrective
+    </h3>
+    <p style="color:var(--text-muted); margin-bottom:1.5rem;">La maintenance corrective intervient après la défaillance de l'équipement.</p>
+    <div class="pros-cons-grid reveal">
+      <div class="content-card" style="grid-column: 1 / -1;">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">Principe</div>
+        <div class="card-desc">Intervention uniquement après la survenue d'une panne ou d'une défaillance. Approche historiquement dominante mais progressivement remplacée par des stratégies plus proactives.</div>
+      </div>
+      <div class="pros-cons-card pros reveal reveal-delay-1">
+        <h4 class="green">✅ Avantages</h4>
+        <ul>
+          <li>Simplicité de mise en œuvre</li>
+          <li>Peu de planification nécessaire</li>
+        </ul>
+      </div>
+      <div class="pros-cons-card cons reveal reveal-delay-2">
+        <h4 class="red">❌ Inconvénients</h4>
+        <ul>
+          <li>Arrêts non planifiés</li>
+          <li>Coûts élevés</li>
+          <li>Impact négatif sur la production</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Préventive -->
+  <div style="margin-bottom: 3rem;">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:var(--white); margin-bottom:1.5rem; padding-left:1rem; border-left:3px solid var(--blue-400);">
+      4.2 Maintenance Préventive
+    </h3>
+    <p style="color:var(--text-muted); margin-bottom:1.5rem;">La maintenance préventive repose sur des interventions planifiées à intervalles réguliers (temps, cycles, usage).</p>
+    <div class="pros-cons-grid reveal">
+      <div class="pros-cons-card pros reveal reveal-delay-1">
+        <h4 class="green">✅ Avantages</h4>
+        <ul>
+          <li>Réduction des pannes</li>
+          <li>Amélioration de la fiabilité</li>
+        </ul>
+      </div>
+      <div class="pros-cons-card cons reveal reveal-delay-2">
+        <h4 class="red">❌ Inconvénients</h4>
+        <ul>
+          <li>Interventions parfois inutiles</li>
+          <li>Coûts de maintenance programmée</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prédictive -->
+  <div style="margin-bottom: 3rem;">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:var(--white); margin-bottom:1.5rem; padding-left:1rem; border-left:3px solid var(--accent2);">
+      4.3 Maintenance Prédictive
+    </h3>
+    <p style="color:var(--text-muted); margin-bottom:1.5rem;">La maintenance prédictive s'appuie sur la surveillance de l'état des équipements à l'aide de capteurs (température, vibrations, pression) et l'analyse des données.</p>
+    <div class="content-grid reveal">
+      <div class="content-card reveal reveal-delay-1">
+        <div class="card-icon">📡</div>
+        <div class="card-title">Capteurs utilisés</div>
+        <ul class="card-items">
+          <li>Température</li>
+          <li>Vibrations</li>
+          <li>Pression</li>
+          <li>Analyse acoustique</li>
+        </ul>
+      </div>
+      <div class="content-card reveal reveal-delay-2">
+        <div class="card-icon">✅</div>
+        <div class="card-title">Avantages</div>
+        <ul class="card-items">
+          <li>Anticipation des pannes</li>
+          <li>Optimisation des coûts</li>
+          <li>Amélioration de la disponibilité</li>
+        </ul>
+      </div>
+      <div class="content-card reveal reveal-delay-3">
+        <div class="card-icon">🏭</div>
+        <div class="card-title">Application projet</div>
+        <div class="card-desc">Dans le cadre de ce projet, cette approche sera appliquée à un compresseur d'air industriel afin de détecter les dégradations avant la défaillance.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NORMES -->
+<section id="normes" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">04 · Standards</div>
+    <h2 class="section-title">Normes & <em>Standards</em></h2>
+    <p class="section-desc">Les cadres normatifs qui régissent les pratiques de maintenance industrielle à l'échelle internationale.</p>
+  </div>
+
+  <div class="norms-grid reveal">
+    <div class="norm-card reveal reveal-delay-1">
+      <div class="norm-badge">ISO 55000</div>
+      <div class="norm-title">Gestion des actifs industriels</div>
+      <div class="norm-desc">La norme ISO 55000 fournit un cadre pour la gestion des actifs industriels. Elle vise à optimiser la valeur des équipements sur l'ensemble de leur cycle de vie, en intégrant la maintenance comme un élément stratégique.</div>
+      <div style="margin-top:1rem;">
+        <a href="https://www.iso.org/standard/55088.html" target="_blank" style="color:var(--accent); font-size:0.8rem;">→ Source officielle ISO</a>
+      </div>
+    </div>
+
+    <div class="norm-card reveal reveal-delay-2">
+      <div class="norm-badge">AFNOR</div>
+      <div class="norm-title">Bonnes pratiques françaises</div>
+      <div class="norm-desc">Les normes AFNOR définissent les bonnes pratiques de maintenance industrielle, notamment en matière de terminologie, d'organisation et de méthodes d'intervention.</div>
+      <div style="margin-top:1rem;">
+        <a href="https://www.boutique.afnor.org" target="_blank" style="color:var(--accent); font-size:0.8rem;">→ Boutique AFNOR</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INDUSTRIE 4.0 -->
+<section id="industrie40" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">05 · Futur</div>
+    <h2 class="section-title">Maintenance & <em>Industrie 4.0</em></h2>
+    <p class="section-desc">Les technologies numériques transforment profondément les pratiques de maintenance industrielle.</p>
+  </div>
+
+  <div class="content-grid reveal">
+    <div class="content-card reveal reveal-delay-1">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Internet des Objets (IoT)</div>
+      <div class="card-desc">Surveillance en temps réel des équipements grâce à des capteurs connectés, permettant une collecte continue de données opérationnelles.</div>
+    </div>
+    <div class="content-card reveal reveal-delay-2">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Big Data</div>
+      <div class="card-desc">Analyse de volumes massifs de données issus des capteurs pour identifier des patterns et anticiper les défaillances avant qu'elles surviennent.</div>
+    </div>
+    <div class="content-card reveal reveal-delay-3">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Intelligence Artificielle</div>
+      <div class="card-desc">Algorithmes d'apprentissage automatique qui facilitent la prise de décision pour une maintenance plus efficace, prédictive et économique.</div>
+    </div>
+  </div>
+
+
+</section>
+
+<div class="divider"></div>
+
+<!-- SOURCES -->
+<section id="sources" style="scroll-margin-top: 80px;">
+  <div class="section-header reveal">
+    <div class="section-tag">06 · Références</div>
+    <h2 class="section-title">Sources & <em>Bibliographie</em></h2>
+  </div>
+
+  <div class="sources-grid reveal">
+    <div class="source-item">
+      <strong>Introduction</strong>
+      <a href="https://www.ibm.com/topics/industrial-maintenance" target="_blank">IBM · Industrial Maintenance</a>
+    </div>
+    <div class="source-item">
+      <strong>Maintenance 4.0</strong>
+      <a href="https://www.mckinsey.com/capabilities/operations/our-insights/predictive-maintenance-4-0" target="_blank">McKinsey · Predictive Maintenance 4.0</a>
+    </div>
+    <div class="source-item">
+      <strong>AFNOR Terminologie</strong>
+      <a href="https://www.boutique.afnor.org" target="_blank">boutique.afnor.org</a>
+    </div>
+    <div class="source-item">
+      <strong>ISO 55000</strong>
+      <a href="https://www.iso.org/standard/55088.html" target="_blank">iso.org · Asset Management</a>
+    </div>
+    <div class="source-item">
+      <strong>Wikipédia FR</strong>
+      <a href="https://fr.wikipedia.org/wiki/Maintenance_industrielle" target="_blank">Maintenance industrielle</a>
+    </div>
+    <div class="source-item">
+      <strong>Corrective</strong>
+      <a href="https://www.fiixsoftware.com/maintenance-types/corrective-maintenance/" target="_blank">Fiix · Corrective Maintenance</a>
+    </div>
+    <div class="source-item">
+      <strong>Préventive</strong>
+      <a href="https://www.ibm.com/topics/preventive-maintenance" target="_blank">IBM · Preventive Maintenance</a>
+    </div>
+    <div class="source-item">
+      <strong>Prédictive</strong>
+      <a href="https://www.mathworks.com/discovery/predictive-maintenance.html" target="_blank">MathWorks · Predictive Maintenance</a>
+    </div>
+    <div class="source-item">
+      <strong>Industrie 4.0</strong>
+      <a href="https://www.plantengineering.com/articles/industry-4-0-and-maintenance/" target="_blank">Plant Engineering · Industry 4.0</a>
+    </div>
+    <div class="source-item">
+      <strong>Smart Maintenance</strong>
+      <a href="https://www.mdpi.com/2076-3417/10/6/2047" target="_blank">MDPI · Smart Maintenance</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Portfolio Numérique · <strong>Maintenance Intelligente & Stratégies 4.0</strong> · 2026</p>
+  <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.5;">Guide pédagogique — Approche collaborative et concurrentielle</p>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Sidebar active state + progress bar
+  const sections = [
+    { id: 'intro',       selector: '#intro' },
+    { id: 'historique',  selector: '#historique' },
+    { id: 'types',       selector: '#types' },
+    { id: 'normes',      selector: '#normes' },
+    { id: 'industrie40', selector: '#industrie40' },
+    { id: 'sources',     selector: '#sources' },
+  ];
+
+  function updateSidebar() {
+    const scrollY = window.scrollY;
+    const winH = window.innerHeight;
+    const docH = document.documentElement.scrollHeight - winH;
+    const pct = Math.round(Math.min(100, (scrollY / docH) * 100));
+
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+
+    let active = sections[0].id;
+    for (const s of sections) {
+      const el = document.querySelector(s.selector);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top <= 120) active = s.id;
+    }
+
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.classList.toggle('active', item.getAttribute('data-section') === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateSidebar, { passive: true });
+  updateSidebar();
+
+  // Close sidebar on mobile after click
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    });
+  });
+</script>
+</div><!-- end main-content -->
+</body>
+</html>

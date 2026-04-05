@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance Prédictive — Exemple 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #0a0f1e;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: rgba(255,255,255,0.07);
+    --accent: #3b82f6;
+    --accent2: #06b6d4;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --light: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 64px;
+    background: rgba(10,15,30,0.9); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--accent2); letter-spacing: 0.04em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { color: var(--muted); font-size: 0.8rem; text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-back { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); text-decoration: none; padding: 0.4rem 1rem; border: 1px solid rgba(59,130,246,0.3); border-radius: 6px; transition: all 0.2s; }
+  .nav-back:hover { background: rgba(59,130,246,0.08); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 8rem 2.5rem 5rem; text-align: center;
+    background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(6,182,212,0.08) 0%, transparent 70%);
+  }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 1.5rem; }
+  .hero h1 span { color: var(--accent2); }
+  .hero p { font-size: 1rem; color: var(--light); max-width: 480px; margin: 0 auto 3rem; font-weight: 300; }
+  .hero-img {
+    width: 100%; max-width: 720px; margin: 0 auto 3rem;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .hero-img img { width: 100%; height: 320px; object-fit: cover; display: block; opacity: 0.85; }
+  .hero-img-caption { padding: 0.75rem 1.2rem; text-align: left; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
+  .hero-img-caption span { color: var(--accent2); font-weight: 500; }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); margin: 0; }
+
+  section { max-width: 1100px; margin: 0 auto; padding: 5rem 2.5rem; }
+
+  .section-label { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 2.5rem; }
+  .section-title span { color: var(--accent2); }
+
+  /* CONCEPT CARDS */
+  .concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+  .concept-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .concept-card:hover { border-color: rgba(6,182,212,0.3); transform: translateY(-4px); }
+
+  .concept-img { width: 100%; height: 180px; object-fit: cover; display: block; opacity: 0.8; }
+
+  .concept-body { padding: 1.5rem; }
+  .concept-tag { display: inline-block; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); color: var(--accent2); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 4px; margin-bottom: 0.8rem; }
+  .concept-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+  .concept-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.2rem; }
+
+  .google-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.75rem; font-weight: 500; color: var(--light);
+    text-decoration: none; padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .google-link:hover { border-color: rgba(59,130,246,0.4); color: var(--accent); }
+  .google-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  /* FULL-WIDTH SECTION WITH IMAGE LEFT */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .split-img { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+  .split-img img { width: 100%; height: 280px; object-fit: cover; display: block; opacity: 0.85; }
+  .split-content { }
+  .split-content p { font-size: 0.9rem; color: var(--light); line-height: 1.8; margin-bottom: 1.5rem; }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+  .stat { text-align: center; padding: 1.5rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent2); line-height: 1; }
+  .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.4rem; }
+
+  /* GLOSSARY */
+  .glossary { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .gloss-item { padding: 1.4rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+  .gloss-term { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+  .gloss-def { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
+
+  footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
+  footer strong { color: var(--accent2); }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .split { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .glossary { grid-template-columns: 1fr; }
+    .concepts { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+ <div class="logo">Maintenance 4.0</div>
+  <ul class="nav-links">
+
+  </ul>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+</nav>
+
+<div class="hero">
+  <div style="max-width:800px;width:100%">
+    <p style="font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:1rem;">Industrie 4.0</p>
+    <h1>Maintenance<br><span>Prédictive</span></h1>
+    <p>Anticiper les pannes. Réduire les arrêts. Optimiser les coûts.</p>
+
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80" alt="Technicien surveillance équipement industriel">
+      <div class="hero-img-caption">
+        <span>↑</span> Surveillance temps réel d'équipements industriels par capteurs IoT
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-val">−35%</div><div class="stat-lbl">Coûts</div></div>
+      <div class="stat"><div class="stat-val">+45%</div><div class="stat-lbl">Durée équip.</div></div>
+      <div class="stat"><div class="stat-val">−70%</div><div class="stat-lbl">Arrêts imprévus</div></div>
+      <div class="stat"><div class="stat-val">10×</div><div class="stat-lbl">ROI moyen</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONCEPTS CLÉS -->
+<section id="concepts">
+  <div class="section-label">Concepts fondamentaux</div>
+  <h2 class="section-title">Les piliers de la maintenance <span>prédictive</span></h2>
+
+  <div class="concepts">
+
+    <div class="concept-card">
+      <img class="concept-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Capteurs industriels IoT">
+      <div class="concept-body">
+        <div class="concept-tag">Collecte de données</div>
+        <div class="concept-title">Capteurs & IoT Industriel</div>
+        <div class="concept-desc">Réseau de capteurs installés sur les équipements pour mesurer vibrations, température et pression en continu.</div>
+        <a class="google-link" href="https://www.google.com/search?q=capteurs+IoT+maintenance+prédictive+industriel" target="_blank">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M13 10H7M10 7l3 3-3 3"/></svg>
+          Rechercher sur Google
+        </a>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <img class="concept-img" src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80" alt="Intelligence artificielle machine learning">
+      <div class="concept-body">
+        <div class="concept-tag">Intelligence Artificielle</div>
+        <div class="concept-title">Algorithmes de prédiction</div>
+        <div class="concept-desc">Modèles ML (LSTM, Random Forest) entraînés sur l'historique des défaillances pour prédire les pannes futures.</div>
+        <a class="google-link" href="https://www.google.com/search?q=machine+learning+prédiction+défaillance+équipement" target="_blank">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M13 10H7M10 7l3 3-3 3"/></svg>
+          Rechercher sur Google
+        </a>
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <img class="concept-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Dashboard monitoring industriel">
+      <div class="concept-body">
+        <div class="concept-tag">Visualisation</div>
+        <div class="concept-title">Tableaux de bord temps réel</div>
+        <div class="concept-desc">Interfaces de monitoring centralisées permettant aux équipes maintenance de suivre l'état de santé des équipements.</div>
+        <a class="google-link" href="https://www.google.com/search?q=dashboard+monitoring+maintenance+prédictive+SCADA" target="_blank">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M13 10H7M10 7l3 3-3 3"/></svg>
+          Rechercher sur Google
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SPLIT SECTION -->
+<section id="technologies">
+  <div class="split">
+    <div class="split-img">
+      <img src="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=800&q=80" alt="Analyse vibratoire sur moteur industriel">
+    </div>
+    <div class="split-content">
+      <div class="section-label">Technique phare</div>
+      <h2 class="section-title" style="margin-bottom:1rem;">Analyse <span>vibratoire</span></h2>
+      <p>La mesure des vibrations sur les équipements rotatifs (moteurs, pompes, compresseurs) est la technique la plus utilisée en maintenance prédictive. Elle permet de détecter des défauts de roulements, déséquilibres et désalignements bien avant qu'ils causent une panne.</p>
+      <a class="google-link" href="https://www.google.com/search?q=analyse+vibratoire+maintenance+prédictive+FFT" target="_blank">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="7"/><path d="M13 10H7M10 7l3 3-3 3"/></svg>
+        En savoir plus — Analyse vibratoire FFT
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GLOSSAIRE -->
+<section id="glossaire">
+  <div class="section-label">Vocabulaire essentiel</div>
+  <h2 class="section-title">Glossaire <span>technique</span></h2>
+
+  <div class="glossary">
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        RUL — Remaining Useful Life
+        <a class="google-link" href="https://www.google.com/search?q=RUL+Remaining+Useful+Life+maintenance+prédictive" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Durée de vie résiduelle estimée d'un équipement avant défaillance. Indicateur clé pour planifier les interventions au bon moment.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        AMDEC / FMEA
+        <a class="google-link" href="https://www.google.com/search?q=AMDEC+FMEA+analyse+modes+défaillance+maintenance" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Analyse des Modes de Défaillance, de leurs Effets et de leur Criticité. Méthode d'identification et priorisation des risques de pannes.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        OEE — Overall Equipment Effectiveness
+        <a class="google-link" href="https://www.google.com/search?q=OEE+Overall+Equipment+Effectiveness+calcul" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Taux de Rendement Synthétique (TRS). Mesure la performance globale d'un équipement : disponibilité × performance × qualité.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        Digital Twin
+        <a class="google-link" href="https://www.google.com/search?q=digital+twin+jumeau+numérique+industrie+4.0" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Réplique numérique d'un équipement physique, mise à jour en temps réel pour simuler son comportement et anticiper les dégradations.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        CMMS / GMAO
+        <a class="google-link" href="https://www.google.com/search?q=GMAO+CMMS+logiciel+gestion+maintenance" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Gestion de Maintenance Assistée par Ordinateur. Système de gestion centralisant les ordres de travail, historiques et pièces de rechange.</div>
+    </div>
+
+    <div class="gloss-item">
+      <div class="gloss-term">
+        FFT — Fast Fourier Transform
+        <a class="google-link" href="https://www.google.com/search?q=FFT+Fast+Fourier+Transform+analyse+vibratoire" target="_blank" style="font-size:0.68rem;white-space:nowrap;">Définition →</a>
+      </div>
+      <div class="gloss-def">Transformée de Fourier Rapide. Algorithme décomposant un signal vibratoire en fréquences pour identifier les signatures de défauts mécaniques.</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>Portfolio Numérique · <strong>Maintenance Intelligente & Stratégies 4.0</strong> · 2026</p>
+  <p style="margin-top:0.8rem;"><a href="index.html">← Retour</a></p>
+</footer>
+
+</body>
+</html>
